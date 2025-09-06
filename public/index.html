@@ -199,11 +199,6 @@
             if (sizeSelect.value === "custom") setSize("custom");
         });
 
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") pad.blur();
-            else pad.focus();
-        });
-
         document.addEventListener("DOMContentLoaded", () => {
             sizeSelect.selectedIndex = 0;
             customWidthInput.value = "";
