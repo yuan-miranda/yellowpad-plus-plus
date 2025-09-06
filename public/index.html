@@ -1,11 +1,217 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yellowpad ++</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 1rem;
+            background: #fff;
+            border-bottom: 1px solid #ccc;
+            z-index: 1;
+
+            flex: 0 0 auto;
+        }
+
+        .pad-wrapper {
+            /* take remaining space */
+            flex: 1 1 auto;
+            width: 100vw;
+            overflow: auto;
+            padding: 1rem;
+            background: #f0f0f0;
+        }
+
+        .yellowpad {
+            background-color: #fff8dc;
+            word-wrap: break-word;
+            margin: 1rem auto;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            line-height: 1.6;
+            word-wrap: break-word;
+            background-image: repeating-linear-gradient(to bottom,
+                    transparent 0px,
+                    transparent 28px,
+                    rgba(0, 0, 0, 0.08) 29px);
+            background-size: 100% 30px;
+            outline: none;
+        }
+
+        .yellowpad:empty::before {
+            content: "Start typing here...";
+            color: #888;
+        }
+
+        header select,
+        header input,
+        header button {
+            font-size: 1rem;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        header select {
+            background: #fff;
+            color: #333;
+        }
+
+        header input {
+            display: none;
+        }
+
+        header button {
+            background-color: #fff;
+        }
+
+        header button:hover {
+            background: #ddd;
+            cursor: pointer;
+        }
+
+        .link-actions {
+            position: fixed;
+            margin: 1rem;
+            z-index: 1;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        @media (max-width: 50rem) {
+            header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            header select,
+            header input,
+            header button {
+                flex: 1 1 auto;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
-    
+    <header>
+        <select name="paperSize" id="paperSize">
+            <option value="8.5in,13in" selected>Yellowpad (8.5 x 13 in)</option>
+            <option value="8.5in,11in">Letter (8.5 x 11 in)</option>
+            <option value="8.5in,14in">Legal (8.5 x 14 in)</option>
+            <option value="7.25in,10.5in">Executive (7.25 x 10.5 in)</option>
+            <option value="8.27in,11.69in">A4 (210 x 297 mm)</option>
+            <option value="5.83in,8.27in">A5 (148 x 210 mm)</option>
+            <option value="custom">Custom</option>
+        </select>
+        <input type="text" id="customWidth" placeholder="Width (e.g. 6in)" style="display:none;">
+        <input type="text" id="customHeight" placeholder="Height (e.g. 9in)" style="display:none;">
+        <button id="apply" style="display:none;">Apply</button>
+    </header>
+
+    <div class="pad-wrapper">
+        <div class="yellowpad" id="pad" contenteditable="true"></div>
+    </div>
+
+    <div class="link-actions">
+        <a href="https://github.com/yuan-miranda/yellowpad-plus-plus" target="_blank" aria-label="GitHub Repository">
+            <img src="media/icon/github-mark.svg" alt="GitHub" width="32" height="32" title="GitHub Repository">
+        </a>
+    </div>
+
+    <script>
+        const pad = document.getElementById("pad");
+        const sizeSelect = document.getElementById("paperSize");
+        const customWidthInput = document.getElementById("customWidth");
+        const customHeightInput = document.getElementById("customHeight");
+        const applyBtn = document.getElementById("apply");
+
+        const INCH_TO_PX = 96;
+
+        function toPixels(value) {
+            value = value.trim();
+
+            // match inch values (like "8.5in")
+            if (value.endsWith("in")) return parseFloat(value) * INCH_TO_PX + "px";
+
+            // assume inches if just a number
+            if (/^\d+(\.\d+)?$/.test(value)) return parseFloat(value) * INCH_TO_PX + "px";
+
+            // already in px
+            if (value.endsWith("px")) return value;
+
+            return value;
+        }
+
+        function setSize(value) {
+            if (value === "custom") {
+                const w = toPixels(customWidthInput.value);
+                const h = toPixels(customHeightInput.value);
+                if (w && h) {
+                    pad.style.width = w;
+                    pad.style.height = h;
+                }
+            } else if (value.includes(",")) {
+                let [w, h] = value.split(",");
+                pad.style.width = toPixels(w);
+                pad.style.height = toPixels(h);
+            }
+        }
+
+        sizeSelect.addEventListener("change", () => {
+            const isCustom = sizeSelect.value === "custom";
+
+            customWidthInput.style.display = isCustom ? "inline-block" : "none";
+            customHeightInput.style.display = isCustom ? "inline-block" : "none";
+            applyBtn.style.display = isCustom ? "inline-block" : "none";
+
+            if (!isCustom) {
+                setSize(sizeSelect.value);
+            }
+        });
+
+        applyBtn.addEventListener("click", () => {
+            if (sizeSelect.value === "custom") setSize("custom");
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") pad.blur();
+            else pad.focus();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            sizeSelect.selectedIndex = 0;
+            customWidthInput.value = "";
+            customHeightInput.value = "";
+            setSize(sizeSelect.value);
+        });
+    </script>
+
 </body>
+
 </html>
