@@ -54,7 +54,7 @@ header {
     background-image: repeating-linear-gradient(to bottom,
             transparent 0,
             transparent calc(1rem * 1.6 - 1px),
-            rgba(0, 0, 0, 0.08) calc(1rem * 1.6));
+            rgba(0, 0, 0, 0.5) calc(1rem * 1.6));
 }
 
 /* .yellowpad:empty::before {
