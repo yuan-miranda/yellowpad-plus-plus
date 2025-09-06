@@ -5,115 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yellowpad ++</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            font-family: Arial, Helvetica, sans-serif;
-
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            padding: 1rem;
-            background: #fff;
-            border-bottom: 1px solid #ccc;
-            z-index: 1;
-
-            flex: 0 0 auto;
-        }
-
-        .pad-wrapper {
-            /* take remaining space */
-            flex: 1 1 auto;
-            width: 100%;
-            overflow: auto;
-            padding: 1rem;
-            background: #f0f0f0;
-        }
-
-        .yellowpad {
-            background-color: #fff8dc;
-            word-wrap: break-word;
-            margin: 1rem auto;
-            padding: 0.2rem 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            line-height: 1.6;
-            word-wrap: break-word;
-            background-image: repeating-linear-gradient(to bottom,
-                    transparent 0px,
-                    transparent 28px,
-                    rgba(0, 0, 0, 0.08) 29px);
-            background-size: 100% 30px;
-            outline: none;
-        }
-
-        /* .yellowpad:empty::before {
-            content: "Start typing here...";
-            color: #888;
-        } */
-
-        header select,
-        header input,
-        header button {
-            font-size: 1rem;
-            padding: 0.4rem 0.6rem;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        header select {
-            background: #fff;
-            color: #333;
-        }
-
-        header input {
-            display: none;
-        }
-
-        header button {
-            background-color: #fff;
-        }
-
-        header button:hover {
-            background: #ddd;
-            cursor: pointer;
-        }
-
-        .link-actions {
-            position: fixed;
-            margin: 1rem;
-            z-index: 1;
-            bottom: 10px;
-            right: 10px;
-        }
-
-        @media (max-width: 50rem) {
-            header {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            header select,
-            header input,
-            header button {
-                flex: 1 1 auto;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -133,7 +25,7 @@
     </header>
 
     <div class="pad-wrapper">
-        <div class="yellowpad" id="pad" contenteditable="true"></div>
+        <div class="yellowpad" id="pad" contenteditable="true" spellcheck="false"></div>
     </div>
 
     <div class="link-actions">
@@ -142,85 +34,7 @@
         </a>
     </div>
 
-    <script>
-        const pad = document.getElementById("pad");
-        const sizeSelect = document.getElementById("paperSize");
-        const customWidthInput = document.getElementById("customWidth");
-        const customHeightInput = document.getElementById("customHeight");
-        const applyBtn = document.getElementById("apply");
-
-        const INCH_TO_PX = 96;
-        const MIN_SIZE_INCH = 1;
-
-        function setSize(value) {
-            if (value === "custom") {
-                let width = parseFloat(customWidthInput.value);
-                let height = parseFloat(customHeightInput.value);
-
-                let valid = true;
-
-                // validate inputs
-                if (!width || width < MIN_SIZE_INCH) {
-                    customWidthInput.style.borderColor = "red";
-                    valid = false;
-                } else {
-                    customWidthInput.style.borderColor = "#ccc";
-                }
-
-                if (!height || height < MIN_SIZE_INCH) {
-                    customHeightInput.style.borderColor = "red";
-                    valid = false;
-                } else {
-                    customHeightInput.style.borderColor = "#ccc";
-                }
-
-                if (valid) {
-                    pad.style.width = width * INCH_TO_PX + "px";
-                    pad.style.height = height * INCH_TO_PX + "px";
-                }
-            } else if (value.includes(",")) {
-                let [w, h] = value.split(",");
-                pad.style.width = parseFloat(w) * INCH_TO_PX + "px";
-                pad.style.height = parseFloat(h) * INCH_TO_PX + "px";
-            }
-        }
-
-        sizeSelect.addEventListener("change", () => {
-            const isCustom = sizeSelect.value === "custom";
-            customWidthInput.style.display = isCustom ? "inline-block" : "none";
-            customHeightInput.style.display = isCustom ? "inline-block" : "none";
-            applyBtn.style.display = isCustom ? "inline-block" : "none";
-
-            if (!isCustom) setSize(sizeSelect.value);
-        });
-
-        applyBtn.addEventListener("click", () => {
-            if (sizeSelect.value === "custom") setSize("custom");
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            sizeSelect.selectedIndex = 0;
-            customWidthInput.value = "";
-            customHeightInput.value = "";
-            setSize(sizeSelect.value);
-        });
-
-        // keep cursor at end if content overflows
-        let lastContent = "";
-        pad.addEventListener("input", () => {
-            if (pad.scrollHeight > pad.clientHeight) {
-                pad.innerText = lastContent;
-                const range = document.createRange();
-                const sel = window.getSelection();
-                range.selectNodeContents(pad);
-                range.collapse(false);
-                sel.removeAllRanges();
-                sel.addRange(range);
-            } else {
-                lastContent = pad.innerText;
-            }
-        });
-    </script>
+    <script src="main.js"></script>
 </body>
 
 </html>
