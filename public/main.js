@@ -58,6 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
     customWidthInput.value = "";
     customHeightInput.value = "";
     setSize(sizeSelect.value);
+
+    pad.innerText = `
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+    `;
 });
 
 // keep cursor at end if content overflows
@@ -74,4 +82,18 @@ pad.addEventListener("input", () => {
     } else {
         lastContent = pad.innerText;
     }
+});
+
+pad.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+
+    range.insertNode(document.createTextNode("    "));
+    range.collapse(false);
+
+    sel.removeAllRanges();
+    sel.addRange(range);
 });
