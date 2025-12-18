@@ -65,7 +65,7 @@ public class HelloWorld {
         System.out.println("Hello, World!");
     }
 }
-    `;
+`;
 });
 
 // keep cursor at end if content overflows
