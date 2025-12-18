@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setSize(sizeSelect.value);
 
     pad.innerText = `
-public class App {
+public class ඞpp {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
