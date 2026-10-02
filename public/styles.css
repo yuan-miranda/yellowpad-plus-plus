@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -23,50 +23,66 @@ header {
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     background: #fff;
     border-bottom: 1px solid #ccc;
-    z-index: 1;
+    z-index: 10;
 
     flex: 0 0 auto;
 }
 
 .pad-wrapper {
-    /* take remaining space */
     flex: 1 1 auto;
-    width: 100%;
     overflow: auto;
-    padding: 1rem;
-    background: #f0f0f0;
+    padding: 2rem 1rem;
+    background: #e8e8e8;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .yellowpad {
+    --line-height: 1.6rem;
+    --pad-padding-top: 1rem;
+    --pad-padding-x: 2.5rem;
+
     background-color: #fff8dc;
     word-wrap: break-word;
-    margin: 1rem auto;
-    padding: 0.2rem 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    padding: var(--pad-padding-top) var(--pad-padding-x);
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     outline: none;
     white-space: pre-wrap;
+    overflow: hidden;
 
     font-size: 1rem;
-    line-height: 1.6;
-    background-size: 100% calc(1rem * 1.6);
-    background-image: repeating-linear-gradient(to bottom,
-            transparent 0,
-            transparent calc(1rem * 1.6 - 1px),
-            rgba(0, 123, 255, 0.5) calc(1rem * 1.6));
+    line-height: var(--line-height);
+
+    /* Ruled lines offset by padding-top so grid aligns with text */
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(var(--line-height) - 1px),
+        rgba(0, 123, 255, 0.35) calc(var(--line-height) - 1px),
+        rgba(0, 123, 255, 0.35) var(--line-height)
+    );
+    background-size: 100% var(--line-height);
+    background-position: 0 var(--pad-padding-top);
+
+    flex-shrink: 0;
 }
 
 /* .yellowpad:empty::before {
-content: "Start typing here...";
-color: #888;
+    content: "Start typing here...";
+    color: #888;
 } */
 
 header select,
 header input,
 header button {
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding: 0.4rem 0.6rem;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -75,27 +91,41 @@ header button {
 header select {
     background: #fff;
     color: #333;
+    cursor: pointer;
 }
 
 header input {
     display: none;
+    width: 9rem;
 }
 
 header button {
     background-color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 header button:hover {
     background: #ddd;
-    cursor: pointer;
 }
 
 .link-actions {
     position: fixed;
-    margin: 1rem;
-    z-index: 1;
-    bottom: 10px;
-    right: 10px;
+    z-index: 10;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+.link-actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.link-actions a:hover {
+    opacity: 1;
 }
 
 @media (max-width: 50rem) {

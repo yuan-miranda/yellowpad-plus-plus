@@ -1,10 +1,9 @@
-const pad = document.getElementById("pad");
+﻿const pad = document.getElementById("pad");
 const sizeSelect = document.getElementById("paperSize");
 const customWidthInput = document.getElementById("customWidth");
 const customHeightInput = document.getElementById("customHeight");
 const applyBtn = document.getElementById("apply");
 
-const INCH_TO_PX = 96;
 const MIN_SIZE_INCH = 1;
 
 function setSize(value) {
@@ -30,13 +29,13 @@ function setSize(value) {
         }
 
         if (valid) {
-            pad.style.width = width * INCH_TO_PX + "px";
-            pad.style.height = height * INCH_TO_PX + "px";
+            pad.style.width = width + "in";
+            pad.style.height = height + "in";
         }
     } else if (value.includes(",")) {
         let [w, h] = value.split(",");
-        pad.style.width = parseFloat(w) * INCH_TO_PX + "px";
-        pad.style.height = parseFloat(h) * INCH_TO_PX + "px";
+        pad.style.width = w;   // already "8.5in" etc.
+        pad.style.height = h;
     }
 }
 
@@ -60,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setSize(sizeSelect.value);
 
     pad.innerText = `
-public class ඞpp {
+public class ශpp {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
